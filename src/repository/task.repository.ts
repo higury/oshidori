@@ -18,8 +18,8 @@ export class TaskRepository extends BaseRepository {
         return super.updateDocument(task);
     }
 
-    public delete(task: Task): void {
-        throw new Error('not implemented');
+    public delete(task: Task): Promise<any> {
+      return super.deleteDocument(task);
     }
 
     public list(task: Task): Observable<Task[]> {
