@@ -140,6 +140,17 @@ export class StoreService {
         return this.afStore.doc(docRef).valueChanges();
     }
 
+    /**
+     * ドキュメントへの参照を引数で受け取り、1件のドキュメントを削除する。
+     *
+     * @param {*} docRef
+     * @returns
+     * @memberof StoreService
+     */
+    public deleteDocument(docRef: any) {
+        return this.afStore.doc(docRef).delete();
+    }
+
     // 現在のfirebaseではcustom objectを引数としてサポートしていないので、
     // plainなオブジェクトに変換する必要あり。
     // https://github.com/firebase/firebase-js-sdk/issues/311

@@ -54,4 +54,8 @@ export abstract class BaseRepository {
     protected findDocument(docRef: any): Observable<{}> {
         return this.store.findDocument(docRef);
     }
+
+    protected deleteDocument(docRef: any): Promise<any> {
+        return this.store.deleteDocument(docRef);
+    }
 }

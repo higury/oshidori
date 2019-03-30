@@ -1,4 +1,4 @@
-import { Task } from './../../models/task';
+import { HomePage } from './../home/home';
 import { Component, NgModule } from '@angular/core';
 import { DisplayUtilService } from '../../providers/display-util.service';
 import { KeepRepository } from '../../repository/keep.repository';
@@ -10,6 +10,8 @@ import { IonicImageLoader } from 'ionic-image-loader';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { KeepPage } from '../keep/keep';
 import { IonicPageModule } from 'ionic-angular';
+import { Task } from '../../models/task';
+import { TaskRepository } from './../../repository/task.repository';
 
 /**
  * Generated class for the KeepListPage page.
@@ -42,7 +44,7 @@ export class KeepVm {
 
 export class KeepListPage {
 
-  public task;
+  public task: Task;
 
   public keepVmInDL: KeepVm[];
   public keepListVm: (KeepVm[])[];
@@ -54,7 +56,8 @@ export class KeepListPage {
     public navParams: NavParams,
     private keepRepo: KeepRepository,
     private storage: StorageService,
-    private dutil: DisplayUtilService
+    private dutil: DisplayUtilService,
+    private taskRepo: TaskRepository
   ) {
     this.task = navParams.get('task');
   }
@@ -104,6 +107,14 @@ export class KeepListPage {
     });
   }
 
+  deleteTask() {
+    this.taskRepo.delete(this.task).then(() => {
+      Logger.debug('[deleted]:');
+      Logger.debug(this.task);
+      this.navCtrl.push(HomePage);
+    }).catch(e => { Logger.error(e); });
+  }
+
   ionViewWillEnter() {
     this.dutil.showLoader('データを読み込んでいます...');
     // this.addkeeps();
@@ -120,5 +131,4 @@ export class KeepListPage {
       task: this.task,
     });
   }
-
 }
