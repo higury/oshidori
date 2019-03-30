@@ -21,7 +21,7 @@ export class Keep extends Document implements Collection {
     public title: string;
     public imgUrl: string;
     public memo: string;
-    public decisionFlg: boolean;
+    public decisionFlg: boolean;    
 
     constructor(init?: Partial<Keep>) {
         super();

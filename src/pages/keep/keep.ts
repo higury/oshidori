@@ -16,6 +16,7 @@ import { StorageService } from '../../providers/storage.service';
 import { Observable, Subscription } from 'rxjs';
 import { IonicImageLoader } from 'ionic-image-loader';
 import { IonicPageModule } from 'ionic-angular';
+import { log } from 'util';
 
 /**
  * Generated class for the KeepPage page.
@@ -25,7 +26,7 @@ import { IonicPageModule } from 'ionic-angular';
  */
 
 // チャット表示用
- export class CommentListVm {
+export class CommentListVm {
   comment?: string;
   createUser?: string;
 }
@@ -83,14 +84,12 @@ export class KeepPage {
   }
 
   private getKeep() {
-    let keep = new Keep({
-      parentRef: this.keep,
-    });
     this.KeepVm.downloadUrl = this.storage.getDownloadURL(this.keep.imgUrl);
 
     let task = new Task({
       parentRef: this.task,
     });
+
   }
 
   // firebaseへコメントを登録
@@ -98,19 +97,19 @@ export class KeepPage {
     if (form && form.valid) {
       Logger.debug(form);
 
-    let comment = new Comment({
-      comment: this.commentRegistrationVm.comment,
-    });
-
-    this.commentRepo.add(comment)
-      .then((ref) => {
-        this.commentRegistrationVm.comment = '';
-      })
-      .catch(err => {
-        this.dutil.showToast(err);
-        Logger.error(err);
-        return;
+      let comment = new Comment({
+        comment: this.commentRegistrationVm.comment,
       });
+
+      this.commentRepo.add(comment)
+        .then((ref) => {
+          this.commentRegistrationVm.comment = '';
+        })
+        .catch(err => {
+          this.dutil.showToast(err);
+          Logger.error(err);
+          return;
+        });
     }
   }
 
@@ -148,16 +147,22 @@ export class KeepPage {
 
   decidestatus: Boolean;
   decideStatusChange() {
-    let task = new Task({
-      parentRef: this.task,
+
+    // 更新用のkeepを生成
+    let keep = new Keep({
+      decisionFlg: !this.keep.decisionFlg,
+      ref: this.keep['ref'],
     });
-    task.imgUrl = this.keep.imgUrl;
-    Logger.debug('taskの内容');
-    Logger.debug(task);
-    this.taskRepo.update(task);
+
+    this.keepRepo.update(keep).then(() => {
+      Logger.info(`keep updated ref:${keep.ref}`);
+      this.keep.decisionFlg = keep.decisionFlg;
+    }).catch(e => {
+      Logger.error(e);
+    })
   }
 
- ionViewWillEnter() {
+  ionViewWillEnter() {
     // firebaseからチャットを読み込む
     Logger.debug('ionViewWillEnter: Keep');
     this.dutil.showLoader('データを読み込んでいます...');
@@ -173,18 +178,18 @@ export class KeepPage {
           text: '削除',
           role: 'destructive',
           handler: () => {
-//            this.chats.splice(index, 1);
-//            localStorage.setItem('chats', JSON.stringify(this.chats));
+            //            this.chats.splice(index, 1);
+            //            localStorage.setItem('chats', JSON.stringify(this.chats));
           },
         }, {
           text: '変更',
           handler: () => {
-//            this._modifyChat(index);
+            //            this._modifyChat(index);
           },
         }, {
           text: '閉じる',
           handler: () => {
-//            console.log('Cancel clicked');
+            //            console.log('Cancel clicked');
           },
         },
       ],
@@ -198,7 +203,7 @@ export class KeepPage {
         {
           name: 'chat',
           placeholder: 'チャット',
-//          value: this.chats[index].name,
+          //          value: this.chats[index].name,
         },
       ],
       buttons: [
@@ -208,8 +213,8 @@ export class KeepPage {
         {
           text: '保存',
           handler: data => {
-          //   this.chats[index] = {name:data.chat};
-          // localStorage.setItem('chats', JSON.stringify(this.chats));
+            //   this.chats[index] = {name:data.chat};
+            // localStorage.setItem('chats', JSON.stringify(this.chats));
           },
         },
       ],
@@ -225,8 +230,8 @@ export class KeepPage {
           text: '削除',
           role: 'destructive',
           handler: () => {
-//            this.chats.splice(index, 1);
-//            localStorage.setItem('chats', JSON.stringify(this.chats));
+            //            this.chats.splice(index, 1);
+            //            localStorage.setItem('chats', JSON.stringify(this.chats));
           },
         }, {
           text: '変更',
@@ -251,7 +256,7 @@ export class KeepPage {
         {
           name: 'chat',
           placeholder: 'チャット',
-//          value: this.chats[index].name,
+          //          value: this.chats[index].name,
         },
       ],
       buttons: [
@@ -261,8 +266,8 @@ export class KeepPage {
         {
           text: '保存',
           handler: data => {
-//          this.chats[index] = { name: data.chat };
-//          localStorage.setItem('chats', JSON.stringify(this.chats));
+            //          this.chats[index] = { name: data.chat };
+            //          localStorage.setItem('chats', JSON.stringify(this.chats));
           },
         },
       ],

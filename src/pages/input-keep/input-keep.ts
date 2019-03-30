@@ -55,7 +55,7 @@ export class InputKeepPage {
   input() {
     Logger.debug('keep登録します');
     Logger.debug(this.selectedTask);
-    this.keepRepository.add(new Keep({ imgUrl: this.fullPath, memo: this.memo, parentRef: this.selectedTask }))
+    this.keepRepository.add(new Keep({ imgUrl: this.fullPath, memo: this.memo, parentRef: this.selectedTask,decisionFlg: false }))
       .then(() => {
         this.toastCtrl.create({ message: '候補を追加しました！', position: 'top', duration: 2000 }).present();
         this.navCtrl.pop();

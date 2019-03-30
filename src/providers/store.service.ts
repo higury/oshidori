@@ -119,9 +119,8 @@ export class StoreService {
         return new Promise<any>((resolve, reject) => {
             let data = this.convertPlainObject(document);
             this.beforeUpdateConvert(document);
-            let collectionName = data['collectionName'];
-            Logger.debug(data);
-            this.afStore.collection(collectionName).doc((data['ref'])['id']).update(data)
+                
+            this.afStore.doc(data['ref']).update(data)
                 .then(res => resolve(res))
                 .catch(err => {
                     // TOOD: firebaseに依存しない業務例外を返却する
